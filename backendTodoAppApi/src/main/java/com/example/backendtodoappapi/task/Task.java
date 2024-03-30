@@ -22,9 +22,14 @@ public class Task extends BaseEntity {
     @JoinColumn(name = "user_id")
     public User user;
 
+    @Enumerated(EnumType.STRING)
     private TaskCategory category;
+
     private String title;
+
     private String description;
+
+    @Enumerated(EnumType.STRING)
     private TaskStatus status;
 
     public Task() {
