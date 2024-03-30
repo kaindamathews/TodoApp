@@ -1,6 +1,7 @@
 package com.example.backendtodoappapi.controllers;
 
 import com.example.backendtodoappapi.auth.AuthenticationRequest;
+import com.example.backendtodoappapi.auth.AuthenticationResponse;
 import com.example.backendtodoappapi.auth.AuthenticationService;
 import com.example.backendtodoappapi.auth.RegisterRequest;
 import jakarta.servlet.http.HttpServletRequest;
@@ -17,14 +18,13 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class AuthController {
     private final AuthenticationService service;
-
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody RegisterRequest request) {
-        return ResponseEntity.ok(service.register(request));
+    public AuthenticationResponse register(@RequestBody RegisterRequest request) {
+        return service.register(request);
     }
     @PostMapping("/authenticate")
-    public ResponseEntity<?> authenticate(@RequestBody AuthenticationRequest request) {
-        return ResponseEntity.ok(service.authenticate(request));
+    public AuthenticationResponse authenticate(@RequestBody AuthenticationRequest request) {
+        return service.authenticate(request);
     }
 
     @PostMapping("/refresh-token")

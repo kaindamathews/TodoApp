@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 
 @Data
 @Builder
+@NoArgsConstructor
 @AllArgsConstructor
 @Entity
 @Table(name = "_tasks")
@@ -21,18 +22,7 @@ public class Task extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     public User user;
-
-    @Enumerated(EnumType.STRING)
-    private TaskCategory category;
-
     private String title;
 
     private String description;
-
-    @Enumerated(EnumType.STRING)
-    private TaskStatus status;
-
-    public Task() {
-        this.status = TaskStatus.PENDING;
-    }
 }
