@@ -29,7 +29,7 @@ public class TaskController {
     public List<TaskResponse> getAllTaskByUser(Principal connectedUser){
         return taskService.getAllTasksByUserId(connectedUser);
     }
-    @PatchMapping("/updateByTaskId")
+    @PutMapping("/updateByTaskId")
     @PreAuthorize("hasAnyAuthority('user:update')")
     public TaskResponse updateByTaskId(@RequestParam long taskId,@RequestBody TaskRequest taskRequest ){
         return  taskService.updateTaskByTaskId(taskId, taskRequest);

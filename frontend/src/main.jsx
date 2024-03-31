@@ -6,6 +6,7 @@ import {createBrowserRouter, RouterProvider} from "react-router-dom";
 import SignupPage from "./pages/SignupPage.jsx";
 import TaskListPage from "./pages/TaskListPage.jsx";
 import NotFoundPage from "./pages/NotFoundPage.jsx";
+import ProtectedRoute from "./pages/component/ProtectedRoute.jsx";
 
 const router = createBrowserRouter([
     {
@@ -19,7 +20,7 @@ const router = createBrowserRouter([
     },
     {
         path:'/home',
-        element:<TaskListPage/>
+        element: <TaskListPage />,
     }
 
 

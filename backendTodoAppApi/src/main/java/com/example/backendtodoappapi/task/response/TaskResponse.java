@@ -12,13 +12,13 @@ import java.util.stream.Collectors;
 @Setter
 @Builder
 public class TaskResponse {
-private long taskId;
+private long id;
 private String title;
 private String description;
 
     public static TaskResponse fromTask(Task task) {
         return TaskResponse.builder()
-                .taskId(task.getId())
+                .id(task.getId())
                 .title(task.getTitle())
                 .description(task.getDescription())
                 .build();

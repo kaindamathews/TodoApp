@@ -1,12 +1,34 @@
 import React, { useState } from "react";
 import { FiUser } from "react-icons/fi";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Navbar = () => {
     const [showDropdown, setShowDropdown] = useState(false);
+    const navigate = useNavigate();
 
     const toggleDropdown = () => {
         setShowDropdown(!showDropdown);
+    };
+
+    const handleLogout = async () => {
+        try {
+            // Send request to logout endpoint
+            const response = await fetch("http://localhost:8080/api/v1/auth/logout", {
+                method: "POST",
+                headers: {
+                    "Authorization": `Bearer ${localStorage.getItem('access_token')}`
+                }
+            });
+            if (response.ok) {
+                localStorage.removeItem('access_token');
+                navigate('/');
+
+            } else {
+                console.error("Failed to logout");
+            }
+        } catch (error) {
+            console.error("Error:", error);
+        }
     };
 
     return (
@@ -23,7 +45,7 @@ const Navbar = () => {
                                 <Link to="/profile" className="block py-2 px-4 hover:bg-gray-700">Profile</Link>
                             </li>
                             <li>
-                                <Link to="/logout" className="block py-2 px-4 hover:bg-gray-700">Logout</Link>
+                                <button onClick={handleLogout} className="block py-2 px-4 hover:bg-gray-700">Logout</button>
                             </li>
                         </ul>
                     </div>

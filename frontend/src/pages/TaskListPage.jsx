@@ -1,82 +1,118 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import TaskCard from "./component/TaskCard.jsx";
-import {FiUser, FiPlus, FiX} from "react-icons/fi";
+import { FiPlus } from "react-icons/fi";
 import AddTask from "./component/AddTask.jsx";
 import Narbar from "./component/Narbar.jsx";
 
-
 const TaskListPage = () => {
-    const [showAddTaskForm, setShowAddTaskForm] = useState(false); // State to manage visibility of add task form
+    const [showAddTaskForm, setShowAddTaskForm] = useState(false);
+    const [tasks, setTasks] = useState([]);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(null);
+
+    useEffect(() => {
+        fetchTasks();
+    }, []);
+
+    const fetchTasks = async () => {
+        try {
+            setLoading(true);
+            const response = await fetch("http://localhost:8080/api/v1/task/getAllTaskByUser", {
+                method: "GET",
+                headers: {
+                    "Authorization": `Bearer ${localStorage.getItem('access_token')}`
+                }
+            });
+            if (!response.ok) {
+                throw new Error("Failed to fetch tasks");
+            }
+            const data = await response.json();
+            setTasks(data);
+        } catch (error) {
+            setError(error.message);
+        } finally {
+            setLoading(false);
+        }
+    };
 
     const handleAddTaskClick = () => {
         setShowAddTaskForm(!showAddTaskForm);
     };
 
-    const tasks = [
-        {
-            id: 1,
-            title: "Complete Project Proposal",
-            description: "Finish writing the project proposal document and submit it by Friday.",
-            date: "2024-04-05",
-        },
-        {
-            id: 2,
-            title: "Prepare Presentation Slides",
-            description: "Create slides for the upcoming team presentation meeting.",
-            date: "2024-04-10",
-        },
-        {
-            id: 3,
-            title: "Review Code Changes",
-            description: "Review and provide feedback on the latest code changes in the development branch.",
-            date: "2024-04-15",
-        },
-        {
-            id: 4,
-            title: "Review Code Changes",
-            description: "Review and provide feedback on the latest code changes in the development branch.",
-            date: "2024-04-15",
-        },
+    const handleAddTask = async (newTask) => {
+        try {
+            const response = await fetch("http://localhost:8080/api/v1/task/addTask", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${localStorage.getItem('access_token')}`
+                },
+                body: JSON.stringify(newTask)
+            });
+            if (!response.ok) {
+                throw new Error("Failed to add task");
+            }
+            fetchTasks();
+            setShowAddTaskForm(false);
+        } catch (error) {
+            setError(error.message);
+        }
+    };
 
-        {
-            id: 5,
-            title: "Review Code Changes",
-            description: "Review and provide feedback on the latest code changes in the development branch.",
-            date: "2024-04-15",
-        },
-        // Add more tasks as needed
-    ];
+    const handleDeleteTask = async (taskId) => {
+        try {
+            const response = await fetch(`http://localhost:8080/api/v1/task/deleteTaskByTaskId/${taskId}`, {
+                method: "DELETE",
+                headers: {
+                    "Authorization": `Bearer ${localStorage.getItem('access_token')}`
+                }
+            });
+            if (!response.ok) {
+                throw new Error("Failed to delete task");
+            }
+            fetchTasks();
+        } catch (error) {
+            setError(error.message);
+        }
+    };
 
-
-
+    const handleUpdateTask = async (updatedTask) => {
+        try {
+            const response = await fetch(`http://localhost:8080/api/v1/task/updateTaskByTaskId/${updatedTask.id}`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${localStorage.getItem('access_token')}`
+                },
+                body: JSON.stringify(updatedTask)
+            });
+            if (!response.ok) {
+                throw new Error("Failed to update task");
+            }
+            fetchTasks();
+        } catch (error) {
+            setError(error.message);
+        }
+    };
 
     return (
         <div>
-
             <Narbar />
-
-            {/* Button to toggle add task form */}
             <div className="fixed bottom-4 right-4">
                 <button className="bg-yellow-500 text-black py-2 px-4 rounded-full" onClick={handleAddTaskClick}>
                     <FiPlus />
                 </button>
             </div>
-
-            {/* Task cards */}
             <div className="flex justify-center">
                 <div className="mt-20 p-10 w-full max-w-screen-lg">
-                    {tasks.map(task => (
-                        <TaskCard key={task.id} task={task}/>
+                    {loading && <p>Loading tasks...</p>}
+                    {error && <p>Error: {error}</p>}
+                    {!loading && !error && tasks.map(task => (
+                        <TaskCard key={task.id} task={task} onDelete={handleDeleteTask} onUpdate={handleUpdateTask} />
                     ))}
                 </div>
             </div>
-
-
-            {showAddTaskForm && (
-                <AddTask setShowAddTaskForm={setShowAddTaskForm} />
-
-            )}
-
+            {showAddTaskForm && <AddTask setShowAddTaskForm={setShowAddTaskForm} onAddTask={handleAddTask} />}
         </div>
     );
 };
