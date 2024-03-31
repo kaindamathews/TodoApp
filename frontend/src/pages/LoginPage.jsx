@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FiArrowRight } from "react-icons/fi";
+import {loginUser} from "../services/authService.js";
 
 const LoginPage = () => {
     const navigate = useNavigate();
@@ -18,29 +19,8 @@ const LoginPage = () => {
         });
     };
 
-    const handleLogin = async () => {
-        try {
-            const response = await fetch("http://localhost:8080/api/v1/auth/authenticate", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify(formData)
-            });
-
-            if (response.ok) {
-                const data = await response.json();
-                localStorage.setItem("access_token", data.access_token);
-                localStorage.setItem("refresh_token", data.refresh_token);
-                navigate("/home");
-            } else {
-                const errorMessage = await response.text();
-                setError(errorMessage);
-            }
-        } catch (error) {
-            console.error("Error:", error);
-            setError("An error occurred while logging in. Please try again.");
-        }
+    const handleLogin = () => {
+        loginUser(formData, navigate, setError);
     };
 
     return (

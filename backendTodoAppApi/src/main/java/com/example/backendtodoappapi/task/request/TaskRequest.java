@@ -10,4 +10,9 @@ import lombok.Setter;
 public class TaskRequest {
     private String title;
     private String description;
+
+    public TaskRequest(String title, String description) {
+        this.title = title;
+        this.description = description;
+    }
 }

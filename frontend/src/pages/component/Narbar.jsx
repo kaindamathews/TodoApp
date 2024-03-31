@@ -16,8 +16,10 @@ const Navbar = () => {
             const response = await fetch("http://localhost:8080/api/v1/auth/logout", {
                 method: "POST",
                 headers: {
-                    "Authorization": `Bearer ${localStorage.getItem('access_token')}`
-                }
+                    "Authorization": `Bearer ${localStorage.getItem('access_token')}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({})
             });
             if (response.ok) {
                 localStorage.removeItem('access_token');

@@ -1,9 +1,7 @@
 package com.example.backendtodoappapi.task.response;
 
 import com.example.backendtodoappapi.task.Task;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -16,6 +14,11 @@ private long id;
 private String title;
 private String description;
 
+    public TaskResponse(long id, String title, String description) {
+        this.id = id;
+        this.title = title;
+        this.description = description;
+    }
     public static TaskResponse fromTask(Task task) {
         return TaskResponse.builder()
                 .id(task.getId())

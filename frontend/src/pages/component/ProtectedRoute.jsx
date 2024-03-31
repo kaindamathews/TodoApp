@@ -7,7 +7,7 @@ const ProtectedRoute = ({ element: Element, ...rest }) => {
     return (
         <Route
             {...rest}
-            element={accessToken ? <Element /> : <Navigate to="/" replace />}
+            element={accessToken ? <Element /> : <Navigate to="/login" replace />}
         />
     );
 };

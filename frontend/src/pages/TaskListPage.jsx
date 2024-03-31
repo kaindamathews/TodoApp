@@ -3,6 +3,7 @@ import TaskCard from "./component/TaskCard.jsx";
 import { FiPlus } from "react-icons/fi";
 import AddTask from "./component/AddTask.jsx";
 import Narbar from "./component/Narbar.jsx";
+import { fetchTasks, addTask, deleteTask, updateTask } from "../services/taskService";
 
 const TaskListPage = () => {
     const [showAddTaskForm, setShowAddTaskForm] = useState(false);
@@ -11,23 +12,14 @@ const TaskListPage = () => {
     const [error, setError] = useState(null);
 
     useEffect(() => {
-        fetchTasks();
+        fetchAllTasks();
     }, []);
 
-    const fetchTasks = async () => {
+    const fetchAllTasks = async () => {
         try {
             setLoading(true);
-            const response = await fetch("http://localhost:8080/api/v1/task/getAllTaskByUser", {
-                method: "GET",
-                headers: {
-                    "Authorization": `Bearer ${localStorage.getItem('access_token')}`
-                }
-            });
-            if (!response.ok) {
-                throw new Error("Failed to fetch tasks");
-            }
-            const data = await response.json();
-            setTasks(data);
+            const fetchedTasks = await fetchTasks();
+            setTasks(fetchedTasks);
         } catch (error) {
             setError(error.message);
         } finally {
@@ -35,24 +27,10 @@ const TaskListPage = () => {
         }
     };
 
-    const handleAddTaskClick = () => {
-        setShowAddTaskForm(!showAddTaskForm);
-    };
-
     const handleAddTask = async (newTask) => {
         try {
-            const response = await fetch("http://localhost:8080/api/v1/task/addTask", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${localStorage.getItem('access_token')}`
-                },
-                body: JSON.stringify(newTask)
-            });
-            if (!response.ok) {
-                throw new Error("Failed to add task");
-            }
-            fetchTasks();
+            await addTask(newTask);
+            fetchAllTasks();
             setShowAddTaskForm(false);
         } catch (error) {
             setError(error.message);
@@ -61,16 +39,8 @@ const TaskListPage = () => {
 
     const handleDeleteTask = async (taskId) => {
         try {
-            const response = await fetch(`http://localhost:8080/api/v1/task/deleteTaskByTaskId/${taskId}`, {
-                method: "DELETE",
-                headers: {
-                    "Authorization": `Bearer ${localStorage.getItem('access_token')}`
-                }
-            });
-            if (!response.ok) {
-                throw new Error("Failed to delete task");
-            }
-            fetchTasks();
+            await deleteTask(taskId);
+            fetchAllTasks();
         } catch (error) {
             setError(error.message);
         }
@@ -78,18 +48,8 @@ const TaskListPage = () => {
 
     const handleUpdateTask = async (updatedTask) => {
         try {
-            const response = await fetch(`http://localhost:8080/api/v1/task/updateTaskByTaskId/${updatedTask.id}`, {
-                method: "PUT",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${localStorage.getItem('access_token')}`
-                },
-                body: JSON.stringify(updatedTask)
-            });
-            if (!response.ok) {
-                throw new Error("Failed to update task");
-            }
-            fetchTasks();
+            await updateTask(updatedTask);
+            fetchAllTasks();
         } catch (error) {
             setError(error.message);
         }
@@ -99,7 +59,7 @@ const TaskListPage = () => {
         <div>
             <Narbar />
             <div className="fixed bottom-4 right-4">
-                <button className="bg-yellow-500 text-black py-2 px-4 rounded-full" onClick={handleAddTaskClick}>
+                <button className="bg-yellow-500 text-black py-2 px-4 rounded-full" onClick={() => setShowAddTaskForm(!showAddTaskForm)}>
                     <FiPlus />
                 </button>
             </div>

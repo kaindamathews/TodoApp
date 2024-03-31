@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FiArrowRight } from "react-icons/fi";
+import {signupUser} from "../services/authService.js";
 
 const SignupPage = () => {
     const navigate = useNavigate();
@@ -20,32 +21,8 @@ const SignupPage = () => {
         });
     };
 
-    const handleSignup = async () => {
-        try {
-            const response = await fetch("http://localhost:8080/api/v1/auth/register", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    ...formData,
-                    role: "USER"
-                })
-            });
-
-            if (response.ok) {
-                const data = await response.json();
-                localStorage.setItem("access_token", data.access_token);
-                localStorage.setItem("refresh_token", data.refresh_token);
-                navigate("/home");
-            } else {
-                const errorMessage = await response.text();
-                setError(errorMessage);
-            }
-        } catch (error) {
-            console.error("Error:", error);
-            setError("An error occurred while signing up. Please try again.");
-        }
+    const handleSignup = () => {
+        signupUser(formData, navigate, setError);
     };
 
     return (
