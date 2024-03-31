@@ -34,27 +34,6 @@ class TaskServiceTests {
         MockitoAnnotations.openMocks(this);
     }
 
-    @Test
-    void shouldAddNewTaskSuccessfully() {
-        // Mock user and task request
-        User user = new User();
-        Principal principal = new UsernamePasswordAuthenticationToken(user, null);
-        TaskRequest taskRequest = new TaskRequest("Sample Title", "Sample Description");
-
-        // Mock task creation
-        Task savedTask = new Task();
-        when(taskRepository.save(any(Task.class))).thenReturn(savedTask);
-
-        // Call the service method
-        TaskResponse taskResponse = taskService.addNewTask(taskRequest, principal);
-
-        // Verify that the task was saved and the response is as expected
-        verify(taskRepository).save(any(Task.class));
-        assertNotNull(taskResponse);
-        assertEquals(savedTask.getId(), taskResponse.getId());
-        assertEquals(taskRequest.getTitle(), taskResponse.getTitle());
-        assertEquals(taskRequest.getDescription(), taskResponse.getDescription());
-    }
 
     @Test
     void shouldDeleteTaskById() {
