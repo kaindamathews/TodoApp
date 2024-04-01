@@ -85,7 +85,7 @@ Before you begin, ensure that you have the following software installed:
      ```
 
    - **Dockerfile**: 
-     Replace `backend-0.0.1-SNAPSHOT.jar` with the name of the Spring Boot application JAR file located in the `target` folder. Your Dockerfile should look like this:
+     Replace `backend-0.0.1-SNAPSHOT.jar` with the name of the Spring Boot application JAR file located in the `target` folder after build the application of backendTodoAppApi. Your Dockerfile should look like this:
      ```Dockerfile
      FROM openjdk:20
 
@@ -95,7 +95,7 @@ Before you begin, ensure that you have the following software installed:
      # Copy the packaged JAR file into the container
      COPY target/backend-0.0.1-SNAPSHOT.jar /app/todobackend-api.jar
 
-     # Expose port if needed
+     # Expose port
      EXPOSE 8080
 
      # Run Spring Boot application

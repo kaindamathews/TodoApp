@@ -6,7 +6,7 @@ WORKDIR /app
 # Copy the packaged JAR file into the container
 COPY target/backend-0.0.1-SNAPSHOT.jar /app/todobackend-api.jar
 
-# Expose port if needed
+# Expose port 
 EXPOSE 8080
 
 # Run Spring Boot application
