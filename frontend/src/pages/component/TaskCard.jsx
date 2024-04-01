@@ -1,5 +1,9 @@
 import React, { useState } from "react";
-import { FiEdit, FiTrash2 } from "react-icons/fi";
+import { FiEdit, FiTrash2, FiX } from "react-icons/fi";
+import { CiSaveUp2 } from "react-icons/ci";
+
+
+
 const TaskCard = ({ task, onDelete, onUpdate }) => {
     const [isEditing, setIsEditing] = useState(false);
     const [updatedTask, setUpdatedTask] = useState(task);
@@ -22,6 +26,11 @@ const TaskCard = ({ task, onDelete, onUpdate }) => {
         setIsEditing(false); // Exit editing mode
     };
 
+    const handleClose = () => {
+        setIsEditing(false); // Exit editing mode
+        setUpdatedTask(task); // Reset updated task to original task
+    };
+
     return (
         <div className="bg-white rounded-lg shadow-md p-4 mb-4">
             {isEditing ? (
@@ -39,13 +48,16 @@ const TaskCard = ({ task, onDelete, onUpdate }) => {
                         onChange={handleChange}
                         className="w-full bg-gray-100 border border-gray-300 rounded px-3 py-2 mb-2"
                     />
-                    <button className="bg-blue-500 text-white py-2 px-4 rounded mr-2" onClick={handleSave}>
-                        Save
+                    <button className="bg-yellow-500 text-black py-2 px-4 rounded mr-2" onClick={handleSave}>
+                        <CiSaveUp2 />
+                    </button>
+                    <button className="bg-gray-300 text-black py-2 px-4 rounded" onClick={handleClose}>
+                        <FiX />
                     </button>
                 </div>
             ) : (
                 <div>
-                    <h2 className="text-lg font-bold mb-2">{task.title} {task.id}</h2>
+                    <h2 className="text-lg font-bold mb-2">{task.title}</h2>
                     <p className="text-gray-700">{task.description} </p>
                     <div className="flex justify-between items-center mt-4">
 

@@ -7,6 +7,7 @@ import SignupPage from "./pages/SignupPage.jsx";
 import TaskListPage from "./pages/TaskListPage.jsx";
 import NotFoundPage from "./pages/NotFoundPage.jsx";
 import ProtectedRoute from "./pages/component/ProtectedRoute.jsx";
+import {AuthProvider} from "./pages/component/AuthProvider.jsx";
 
 const router = createBrowserRouter([
     {
@@ -20,13 +21,15 @@ const router = createBrowserRouter([
     },
     {
         path:'/home',
-        element: <TaskListPage />
+        element:<ProtectedRoute><TaskListPage /></ProtectedRoute>
     }
 
 
 ]);
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
+      <AuthProvider>
       <RouterProvider router={router} />
+      </AuthProvider>
   </React.StrictMode>
 )
