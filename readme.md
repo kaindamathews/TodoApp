@@ -32,12 +32,36 @@ Before you begin, ensure that you have the following software installed:
 3. **Backend Setup**:
    - Open the `backendTodoAppApi` folder in IntelliJ IDEA.
    - Wait for the dependencies to be installed.
-   - Update the `application.properties` file with your PostgreSQL database credentials:
+
+4. **Set up PostgreSQL Database**:
+
+   - **Install PostgreSQL**: Download and install PostgreSQL from [here](https://www.postgresql.org/download/).
+   
+   - **Start PostgreSQL Server**: After installation, start the PostgreSQL server.
+
+   - **Access PostgreSQL Shell**: Open a terminal or command prompt and access the PostgreSQL shell by running:
+     ```bash
+     psql -U postgres
+     ```
+
+   - **Create Database**: In the PostgreSQL shell, create a new database with your desired name:
+     ```sql
+     CREATE DATABASE todo_app_db;
+     ```
+   
+   - **Grant Privileges**: Grant privileges to the default `postgres` user:
+     ```sql
+     GRANT ALL PRIVILEGES ON DATABASE todo_app_db TO postgres;
+     ```
+
+   - **Update Application Configuration**: Update the `application.properties` file of your Spring Boot application (`backendTodoAppApi`) with the new database name:
      ```properties
      spring.datasource.url=jdbc:postgresql://localhost:5432/todo_app_db
-     spring.datasource.username=your_postgres_username
+     spring.datasource.username=postgres
      spring.datasource.password=your_postgres_password
      ```
+
+5. **Docker Setup**:
    - Update the `docker-compose.yml` file as follows:
      ```yaml
      services:
@@ -46,7 +70,7 @@ Before you begin, ensure that you have the following software installed:
          environment:
            - 'POSTGRES_DB=todo_app_db'
            - 'POSTGRES_PASSWORD=your_postgres_password'
-           - 'POSTGRES_USER=your_postgres_username'
+           - 'POSTGRES_USER=postgres'
          ports:
            - '5432:5432'
 
@@ -59,6 +83,7 @@ Before you begin, ensure that you have the following software installed:
          depends_on:
            - postgres
      ```
+
    - **Dockerfile**: 
      Replace `backend-0.0.1-SNAPSHOT.jar` with the name of the Spring Boot application JAR file located in the `target` folder. Your Dockerfile should look like this:
      ```Dockerfile
@@ -77,20 +102,18 @@ Before you begin, ensure that you have the following software installed:
      CMD ["java", "-jar", "todobackend-api.jar"]
      ```
 
-4. **Build the Docker Image**:
-   Open a terminal, navigate to the directory containing your Dockerfile, and run the following command to build the Docker image:
-   ```bash
-   docker build -t todobackend-api .
-   ```
+6. **Build and Run the Application**:
+   - Build the Docker image:
+     ```bash
+     docker build -t todobackend-api .
+     ```
 
-5. **Run the Docker Container**:
-   Once the image is built, you can run the Docker container using the following command:
-   ```bash
-   docker run -p 8080:8080 todobackend-api
-   ```
+   - Run the Docker container:
+     ```bash
+     docker run -p 8080:8080 todobackend-api
+     ```
 
-6. **Or Run the Application from IntelliJ IDEA**:
-   You can also start the backend application directly from IntelliJ IDEA.
+   - Alternatively, you can start the backend application directly from IntelliJ IDEA.
 
 7. **Accessing the Application**:
    Open your browser and go to [http://localhost:5173/](http://localhost:5173/) to sign up and log in to the TodoListApp.
